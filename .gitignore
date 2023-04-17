@@ -1,0 +1,8 @@
+target
+
+.envrc
+
+.idea
+*.iml
+
+.DS_Store

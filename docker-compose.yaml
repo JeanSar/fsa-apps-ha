@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: apidbpwd
+      POSTGRES_USER: apidb
+      POSTGRES_DB: apidb
+    ports:
+      - "5432:5432"
