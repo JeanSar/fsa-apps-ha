@@ -17,6 +17,7 @@ public class EncryptionService {
     private long latence;
 
     public String encrypt(String keyName, String data) throws EncryptException {
+        log.debug("Starting to encrypt with {}", keyName);
         String key = keyName;
         byte[] dataB = Base64.getDecoder().decode(data);
         byte[] keyB = key.getBytes();
@@ -25,14 +26,16 @@ public class EncryptionService {
             dataC[i] = (byte) (dataB[i] + keyB[i % keyB.length]);
         }
         try {
-            Thread.sleep(latence); // Simulation de temps de calcul
+            lock.sleep(latence);
         } catch (InterruptedException e) {
             throw new EncryptException(e);
         }
+        log.debug("Encryption finished");
         return new String(Base64.getEncoder().encode(dataC), StandardCharsets.ISO_8859_1);
     }
 
     public String decrypt(String keyName, String data) throws DecryptException {
+        log.debug("Starting to decrypt with {}", keyName);
         String key = keyName;
         byte[] dataB = Base64.getDecoder().decode(data);
         byte[] keyB = key.getBytes();
@@ -41,10 +44,28 @@ public class EncryptionService {
             dataC[i] = (byte) (dataB[i] - keyB[i % keyB.length]);
         }
         try {
-            Thread.sleep(latence); // Simulation de temps de calcul
+            lock.sleep(latence);
         } catch (InterruptedException e) {
             throw new DecryptException(e);
         }
+        log.debug("Decryption finished");
         return new String(Base64.getEncoder().encode(dataC), StandardCharsets.ISO_8859_1);
     }
+
+    private static class Sleeper {
+        /**
+         * Méthode qui simule le calcul. Afin de simuler une charge processeur en multithreading
+         * dans un cadre monocœur, on rend la méthode synchronized, ce qui va poser un verrou pour
+         * empêcher deux threads de l'utiliser simultanément.
+         *
+         * @param time nombre de milisecond à attendre
+         * @throws InterruptedException si un problème survient pendant le thread.sleep
+         */
+        public synchronized void sleep(long time) throws InterruptedException {
+            log.debug("Compute simulation in {}", this);
+            Thread.sleep(time); // Simulation de temps de calcul
+        }
+    }
+
+    private final static Sleeper lock = new Sleeper();
 }
