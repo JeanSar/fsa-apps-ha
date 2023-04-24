@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-workercontroller-account
+spec:
+  template:
+    spec:
+      serviceAccountName: workercontroller-account
+      containers:
+        - name: test-workercontroller-account
+          image: harbor.fsa.os.univ-lyon1.fr/fsa/workercontroller:latest
+      restartPolicy: Never
+  backoffLimit: 1
