@@ -50,6 +50,27 @@ public class EncryptService {
         return result.getBody();
     }
 
+    /**
+     * Calls a worker for GET method
+     *
+     * @param method  GET route method
+     * @return the data return by the worker
+     * @throws WorkerException    if the request to the worker failed somehow
+     */
+    public Boolean getWorker(String method) throws WorkerException {
+        String url = workerUrl + "/" + method;
+        var result = restTemplate.getForEntity(url, Boolean.class);
+        var status = result.getStatusCode();
+        if (status.is5xxServerError() || status.is4xxClientError()) {
+            LOG.error("Request to failed with code {}", status.value());
+            throw new WorkerException();
+        }
+        if (!result.hasBody()) {
+            LOG.error("Got an empty result from worker");
+            throw new WorkerException("Empty result");
+        }
+        return result.getBody();
+    }
 
     /**
      * Calls a worker for encrypting data
