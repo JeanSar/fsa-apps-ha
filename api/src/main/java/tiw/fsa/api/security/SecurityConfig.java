@@ -26,7 +26,7 @@ public class SecurityConfig {
                                 // accès à /user, /key et /crypt OK pour les utilisateurs authentifiés
                                 .requestMatchers("/user/**", "/key/**", "/crypt/**").authenticated()
                                 // accès à /error ok pour tout le monde
-                                .requestMatchers("/error").permitAll());
+                                .requestMatchers("/error", "/liveness", "/readiness").permitAll());
         http.csrf().disable(); // FIXME: empêche l'accès à l'API par POST via un client hors navigateur, voir si cela a du sens de le réactiver
         return http.build();
     }
