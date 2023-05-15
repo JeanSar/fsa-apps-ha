@@ -42,6 +42,7 @@ public class EncryptController {
      * @param data    the data to encrypt
      * @return the encrypted data
      */
+    @io.micrometer.core.annotation.Timed("encrypt_api_timer")
     @PostMapping("/{login}/{keyname}/encrypt")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -61,6 +62,7 @@ public class EncryptController {
      * @param data    the data to encrypt
      * @return the encrypted data
      */
+    @io.micrometer.core.annotation.Timed("decrypt_api_timer")
     @PostMapping("/{login}/{keyname}/decrypt")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
